@@ -1,0 +1,6 @@
+resources:
+  - bdd-deployment.yaml
+  - clusterip-node.yaml
+  - nodeport-wordpress.yaml
+  - wordpress-deployment.yaml
+  - wp-secret.yaml

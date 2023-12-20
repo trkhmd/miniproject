@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mysql
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: wp-secret
+              key: mysql_root_passwd
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
+          value: "1"
+        - name: MYSQL_DATABASE
+          value: "wordpressdb"
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: wp-secret
+              key: wp_db_user
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: wp-secret
+              key: wp_db_psswd
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql-persistent-storage
+
+        ports:
+        - containerPort: 3306
+      volumes:
+      - name: mysql-persistent-storage
+        hostPath:
+          path: /var/lib/mysql
+
+      
